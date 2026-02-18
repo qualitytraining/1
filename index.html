@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>GymFit Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background: #0d1117; color: #e6edf3; display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 240px;
+      background: #161b22;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #21262d;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #58a6ff;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .menu-btn {
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      text-align: left;
+      color: #c9d1d9;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .menu-btn:hover { background: #1f6feb33; }
+    .menu-btn.active { background: #1f6feb; color: white; }
+
+    .content {
+      flex: 1;
+      padding: 32px;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #161b22;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #21262d;
+      margin-bottom: 20px;
+    }
+
+    ul { list-style: none; }
+    li {
+      padding: 10px 0;
+      border-bottom: 1px solid #21262d;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+
+    input.num {
+      width: 50px;
+      padding: 4px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: #e6edf3;
+      text-align: center;
+    }
+
+    .exercise-done { color: #3fb950; text-decoration: line-through; }
+
+    .day-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+
+    .day-btn {
+      padding: 10px 14px;
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #e6edf3;
+      transition: 0.2s;
+    }
+
+    .day-btn.active {
+      background: #1f6feb;
+      border-color: #1f6feb;
+    }
+
+    .muscle-select {
+      padding: 10px;
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      color: #e6edf3;
+      margin-bottom: 20px;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">GymFit Pro</div>
+
+    <button class="menu-btn active" data-section="inicio">🏠 Inicio</button>
+    <button class="menu-btn" data-section="rutinas">💪 Rutinas</button>
+    <button class="menu-btn" data-section="clases">📅 Clases</button>
+    <button class="menu-btn" data-section="progreso">📈 Progreso</button>
+  </aside>
+
+  <main class="content">
+
+    <section id="inicio">
+      <h1 class="title">Panel General</h1>
+
+      <div class="card">
+        <h2>Resumen rápido</h2>
+
+        <div style="margin-bottom: 20px;">
+          <div style="font-size:14px; color:#8b949e;">Fecha de inicio de membresía</div>
+          <div style="font-size:18px; font-weight:600;">01 / 02 / 2026</div>
+
+          <div style="font-size:14px; color:#8b949e; margin-top:10px;">Fecha de vencimiento</div>
+          <div style="font-size:18px; font-weight:600; color:#ff7b72;">01 / 03 / 2026</div>
+        </div>
+      </div>
+    </section>
+    <!-- ========================= -->
+    <!--        R U T I N A S      -->
+    <!-- ========================= -->
+    <section id="rutinas" class="hidden">
+      <h1 class="title">Rutinas por Día</h1>
+
+      <!-- Selector de días -->
+      <div class="day-selector">
+        <button class="day-btn active" data-day="lunes">Lunes</button>
+        <button class="day-btn" data-day="martes">Martes</button>
+        <button class="day-btn" data-day="miercoles">Miércoles</button>
+        <button class="day-btn" data-day="jueves">Jueves</button>
+        <button class="day-btn" data-day="viernes">Viernes</button>
+      </div>
+
+      <!-- Contenedores por día -->
+      <div id="lunes" class="day-content">
+        <select class="muscle-select" data-day="lunes">
+          <option value="">Agregar músculo…</option>
+          <option value="pecho">Pecho</option>
+          <option value="espalda">Espalda</option>
+          <option value="piernas">Piernas</option>
+          <option value="hombros">Hombros</option>
+          <option value="biceps">Bíceps</option>
+          <option value="triceps">Tríceps</option>
+          <option value="trapecio">Trapecio</option>
+          <option value="gluteos">Glúteos</option>
+          <option value="abdomen">Abdomen</option>
+        </select>
+
+        <!-- Aquí se insertarán las tarjetas dinámicas -->
+        <div class="muscle-container" id="lunes-muscles"></div>
+      </div>
+
+      <div id="martes" class="day-content hidden">
+        <select class="muscle-select" data-day="martes">
+          <option value="">Agregar músculo…</option>
+          <option value="pecho">Pecho</option>
+          <option value="espalda">Espalda</option>
+          <option value="piernas">Piernas</option>
+          <option value="hombros">Hombros</option>
+          <option value="biceps">Bíceps</option>
+          <option value="triceps">Tríceps</option>
+          <option value="trapecio">Trapecio</option>
+          <option value="gluteos">Glúteos</option>
+          <option value="abdomen">Abdomen</option>
+        </select>
+
+        <div class="muscle-container" id="martes-muscles"></div>
+      </div>
+
+      <div id="miercoles" class="day-content hidden">
+        <select class="muscle-select" data-day="miercoles">
+          <option value="">Agregar músculo…</option>
+          <option value="pecho">Pecho</option>
+          <option value="espalda">Espalda</option>
+          <option value="piernas">Piernas</option>
+          <option value="hombros">Hombros</option>
+          <option value="biceps">Bíceps</option>
+          <option value="triceps">Tríceps</option>
+          <option value="trapecio">Trapecio</option>
+          <option value="gluteos">Glúteos</option>
+          <option value="abdomen">Abdomen</option>
+        </select>
+
+        <div class="muscle-container" id="miercoles-muscles"></div>
+      </div>
+
+      <div id="jueves" class="day-content hidden">
+        <select class="muscle-select" data-day="jueves">
+          <option value="">Agregar músculo…</option>
+          <option value="pecho">Pecho</option>
+          <option value="espalda">Espalda</option>
+          <option value="piernas">Piernas</option>
+          <option value="hombros">Hombros</option>
+          <option value="biceps">Bíceps</option>
+          <option value="triceps">Tríceps</option>
+          <option value="trapecio">Trapecio</option>
+          <option value="gluteos">Glúteos</option>
+          <option value="abdomen">Abdomen</option>
+        </select>
+
+        <div class="muscle-container" id="jueves-muscles"></div>
+      </div>
+
+      <div id="viernes" class="day-content hidden">
+        <select class="muscle-select" data-day="viernes">
+          <option value="">Agregar músculo…</option>
+          <option value="pecho">Pecho</option>
+          <option value="espalda">Espalda</option>
+          <option value="piernas">Piernas</option>
+          <option value="hombros">Hombros</option>
+          <option value="biceps">Bíceps</option>
+          <option value="triceps">Tríceps</option>
+          <option value="trapecio">Trapecio</option>
+          <option value="gluteos">Glúteos</option>
+          <option value="abdomen">Abdomen</option>
+        </select>
+
+        <div class="muscle-container" id="viernes-muscles"></div>
+      </div>
+
+    </section>
+    <!-- ========================= -->
+    <!--   SCRIPT DINÁMICO FINAL   -->
+    <!-- ========================= -->
+    <script>
+      /* ============================
+         1. LISTA COMPLETA DE EJERCICIOS
+         ============================ */
+      const ejerciciosPorMusculo = {
+        pecho: [
+          "Press banca plano",
+          "Press inclinado",
+          "Press declinado",
+          "Aperturas con mancuernas",
+          "Aperturas en máquina",
+          "Peck deck",
+          "Fondos en paralelas",
+          "Press con mancuernas",
+          "Cruces en polea alta",
+          "Cruces en polea baja"
+        ],
+        espalda: [
+          "Jalón al pecho",
+          "Jalón tras nuca",
+          "Remo con barra",
+          "Remo con mancuerna",
+          "Remo sentado en polea",
+          "Remo en máquina",
+          "Peso muerto",
+          "Peso muerto rumano",
+          "Pull-over en polea",
+          "Dominadas"
+        ],
+        piernas: [
+          "Sentadilla",
+          "Sentadilla frontal",
+          "Prensa",
+          "Extensión de cuádriceps",
+          "Zancadas / Lunges",
+          "Sentadilla hack",
+          "Sentadilla búlgara",
+          "Curl femoral acostado",
+          "Curl femoral sentado",
+          "Peso muerto rumano",
+          "Elevación de talones de pie",
+          "Elevación de talones sentado"
+        ],
+        hombros: [
+          "Press militar",
+          "Press Arnold",
+          "Elevaciones laterales",
+          "Elevaciones frontales",
+          "Pájaros",
+          "Face pulls",
+          "Remo al mentón"
+        ],
+        biceps: [
+          "Curl con barra",
+          "Curl con mancuernas",
+          "Curl martillo",
+          "Curl concentrado",
+          "Curl alternado",
+          "Curl en predicador",
+          "Curl en polea baja"
+        ],
+        triceps: [
+          "Extensión en polea",
+          "Press francés",
+          "Fondos en paralelas",
+          "Extensión con mancuerna a una mano",
+          "Rompecráneos",
+          "Cuerda en polea"
+        ],
+        trapecio: [
+          "Encogimientos con barra",
+          "Encogimientos con mancuernas",
+          "Remo al mentón",
+          "Elevación de trapecio en polea"
+        ],
+        gluteos: [
+          "Hip thrust",
+          "Puente de glúteo",
+          "Patada de glúteo en polea",
+          "Abducción de cadera",
+          "Sentadilla sumo",
+          "Peso muerto sumo"
+        ],
+        abdomen: [
+          "Crunch",
+          "Crunch en máquina",
+          "Elevación de piernas",
+          "Plancha",
+          "Plancha lateral",
+          "Ab-wheel",
+          "Russian twist",
+          "Mountain climbers"
+        ]
+      };
+
+      /* ============================
+         2. CAMBIO DE DÍA
+         ============================ */
+      const dayButtons = document.querySelectorAll('.day-btn');
+      const dayContents = document.querySelectorAll('.day-content');
+
+      dayButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const day = btn.getAttribute('data-day');
+
+          dayButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          dayContents.forEach(content => {
+            content.classList.toggle('hidden', content.id !== day);
+          });
+        });
+      });
+
+      /* ============================
+         3. GENERAR TARJETA DE MÚSCULO
+         ============================ */
+      function crearTarjetaMusculo(dia, musculo) {
+        const contenedor = document.getElementById(`${dia}-muscles`);
+
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const titulo = document.createElement("h2");
+        titulo.textContent = musculo.charAt(0).toUpperCase() + musculo.slice(1);
+        card.appendChild(titulo);
+
+        const lista = document.createElement("ul");
+
+        ejerciciosPorMusculo[musculo].forEach((ejercicio, index) => {
+          const li = document.createElement("li");
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+
+          const id = `${dia}-${musculo}-${index}-${Math.random()}`;
+          checkbox.setAttribute("data-id", id);
+
+          // cargar estado guardado
+          if (localStorage.getItem(id) === "true") {
+            checkbox.checked = true;
+          }
+
+          checkbox.addEventListener("change", () => {
+            localStorage.setItem(id, checkbox.checked);
+          });
+
+          const span = document.createElement("span");
+          span.textContent = ejercicio;
+
+          const series = document.createElement("input");
+          series.type = "number";
+          series.classList.add("num");
+          series.value = 4;
+          series.setAttribute("data-id", id + "-s");
+
+          if (localStorage.getItem(id + "-s")) {
+            series.value = localStorage.getItem(id + "-s");
+          }
+
+          series.addEventListener("input", () => {
+            localStorage.setItem(id + "-s", series.value);
+          });
+
+          const reps = document.createElement("input");
+          reps.type = "number";
+          reps.classList.add("num");
+          reps.value = 10;
+          reps.setAttribute("data-id", id + "-r");
+
+          if (localStorage.getItem(id + "-r")) {
+            reps.value = localStorage.getItem(id + "-r");
+          }
+
+          reps.addEventListener("input", () => {
+            localStorage.setItem(id + "-r", reps.value);
+          });
+
+          li.appendChild(checkbox);
+          li.appendChild(span);
+          li.append("Series:");
+          li.appendChild(series);
+          li.append("Reps:");
+          li.appendChild(reps);
+
+          lista.appendChild(li);
+        });
+
+        card.appendChild(lista);
+        contenedor.appendChild(card);
+      }
+
+      /* ============================
+         4. SELECTOR DE MÚSCULOS
+         ============================ */
+      const selects = document.querySelectorAll(".muscle-select");
+
+      selects.forEach(select => {
+        select.addEventListener("change", () => {
+          const musculo = select.value;
+          const dia = select.getAttribute("data-day");
+
+          if (musculo !== "") {
+            crearTarjetaMusculo(dia, musculo);
+          }
+
+          select.value = "";
+        });
+      });
+
+      /* ============================
+         5. NAVEGACIÓN DEL MENÚ
+         ============================ */
+      const menuButtons = document.querySelectorAll('.menu-btn');
+      const sections = ['inicio', 'rutinas', 'clases', 'progreso'];
+
+      menuButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.getAttribute('data-section');
+
+          menuButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          sections.forEach(id => {
+            document.getElementById(id).classList.toggle('hidden', id !== target);
+          });
+        });
+      });
+    </script>
